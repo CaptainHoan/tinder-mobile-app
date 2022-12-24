@@ -2,19 +2,20 @@ import { View, Text, Image, TouchableOpacity, TextInput } from 'react-native'
 import React, {useRef, useState}  from 'react'
 import PhoneInput from "react-native-phone-number-input";
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+import { auth } from '../../../firebaseConfig';
+import { PhoneAuthProvider, RecaptchaVerifier, signInWithCredential } from 'firebase/auth';
 import { getApp } from 'firebase/app';
-import { app, auth } from '../../../firebaseConfig';
-import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
 
 const LoginScreen = () => {
 
-  //const app = getApp()
+  const app = getApp()
   const phoneInput = useRef<PhoneInput>(null);
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const recaptchaVerifier = React.useRef(null);
   const [showConfirmInput, setShowConfirmInput] = useState<boolean>(false)
   const [verificationCode, setVerificationCode] = useState<string>('')
   const [verificationId, setVerificationId] = useState<string>('')
+  const attemptInvisibleVerification = false;
 
   //firebaseConfig
   const firebaseConfig = app ? app.options : undefined;
@@ -37,7 +38,8 @@ const LoginScreen = () => {
   const LogInWithPhone = async() => {
     try {
       const credential = PhoneAuthProvider.credential(verificationId, verificationCode);
-      await signInWithCredential(auth, credential);
+      const userCredential = await signInWithCredential(auth, credential);
+      console.log(userCredential)
     }catch(error:any) {
       console.log(error.message)
     }
@@ -48,7 +50,7 @@ const LoginScreen = () => {
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={firebaseConfig}
-        // attemptInvisibleVerification
+        //attemptInvisibleVerification
       />
       <Image 
         source={{uri: 'https://logos-world.net/wp-content/uploads/2020/09/Tinder-Logo.png'}}
@@ -79,7 +81,6 @@ const LoginScreen = () => {
               placeholderTextColor={'gray'}
               value={verificationCode}
               onChangeText={value => setVerificationCode(value)}
-              editable={!!verificationId}
               keyboardType="default"
               autoFocus={true}
               style={{textAlign: 'center'}}
