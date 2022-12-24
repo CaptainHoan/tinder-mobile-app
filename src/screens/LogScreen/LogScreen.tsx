@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, TouchableOpacity } from 'react-native'
+import { View, Text, ImageBackground, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -9,8 +9,8 @@ const LogScreen = () => {
   return (
     <ImageBackground
         style={{flex: 1, justifyContent: "center"}}
-        resizeMode="contain"
-        source={{uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSA9VzSCto0TAtDeRmg4v5Zn55pyKvf85isouxCEnRNY_6Yn1g7m924ULBoEZeO_Mgk-NQ&usqp=CAU'}}
+        resizeMode="cover"
+        source={{uri: 'https://i.pinimg.com/originals/79/b3/74/79b374c74ed6d6c73f2e20fd31d6904f.png'}}
     >
         <TouchableOpacity 
             onPress={() => navigation.navigate('Login')}
