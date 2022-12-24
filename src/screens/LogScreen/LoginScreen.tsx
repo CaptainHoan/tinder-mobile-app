@@ -20,12 +20,18 @@ const LoginScreen = () => {
   //firebaseConfig
   const firebaseConfig = app ? app.options : undefined;
 
+  //test phone number and verification code created on firebase
+  const testPhoneNumber = '+1 234-567-1234'
+  const testVerificationCode = '123456'
+  const testPhoneNumber2 = '+1 234-567-6789'
+  const testVerification2 = '123456'
+
   //function to sendVerificationCode
   const sendVerificationCode = async() => {
     try {
       const phoneProvider = new PhoneAuthProvider(auth)
       const verificationId = await phoneProvider.verifyPhoneNumber(
-        phoneNumber,
+        testPhoneNumber, //your actual phone number : "phoneNumber"
         recaptchaVerifier.current
       )
       setShowConfirmInput(true)
@@ -37,7 +43,7 @@ const LoginScreen = () => {
 
   const LogInWithPhone = async() => {
     try {
-      const credential = PhoneAuthProvider.credential(verificationId, verificationCode);
+      const credential = PhoneAuthProvider.credential(verificationId, testVerificationCode); // your actual verification code sent to your device: "verificationCode"
       const userCredential = await signInWithCredential(auth, credential);
       console.log(userCredential)
     }catch(error:any) {
