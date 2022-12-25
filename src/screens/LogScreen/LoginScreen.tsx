@@ -24,6 +24,9 @@ const LoginScreen = () => {
   const testPhoneNumber = '+1 234-567-1234'
   const testPhoneNumber2 = '+1 234-567-6789'
   const testPhoneNumber3 = '+1 234-567-2345'
+  const testPhoneNumber4 = '+1 234-567-3456'
+  const testPhoneNumber5 = '+1 234-567-4567'
+  const testPhoneNumber6 = '+1 234-567-5678'
   const testVerificationCode = '123456'
 
   //function to sendVerificationCode

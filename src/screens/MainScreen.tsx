@@ -17,7 +17,8 @@ type DATA_TYPE =  {
   age: string,
   photoURL: string,
   id: string,
-  timestamp?: string 
+  timestamp?: string,
+  avatar: string 
 }
 
 const MainScreen = () => {
@@ -38,7 +39,7 @@ const MainScreen = () => {
   }
 
   const [profiles, setProfile] = useState<DATA_TYPE[]>([])
-  const [avatar, setAvatar] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0Xdf9OyXn9BpWL30gb6cpyLnkiCCbSaH8wVB1007o9WpYBDgb6J1_afDQTdJuqwgE3xM&usqp=CAU')
+  const [avatar, setAvatar] = useState<string>('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0Xdf9OyXn9BpWL30gb6cpyLnkiCCbSaH8wVB1007o9WpYBDgb6J1_afDQTdJuqwgE3xM&usqp=CAU')
 
   //render userProfile from Firestore database
   useLayoutEffect(
@@ -79,7 +80,7 @@ const MainScreen = () => {
           }))
         )
         setAvatar(
-          snapshot.docs.filter(doc => doc.id == user.uid).map(doc => ({
+          snapshot.docs.filter(doc => doc.id === user.uid).map(doc => ({
           id: doc.id,
           ...doc.data()
         }))[0].avatar)
@@ -87,8 +88,9 @@ const MainScreen = () => {
     }
     fetchCards()
     return unsub;
-  }, [])
+  }, [avatar, db])
 
+  console.log(avatar)
   //console.log(profiles)
 
   //swipe Left function to record in the database profiles you dislike (want to pass)
@@ -125,8 +127,11 @@ const MainScreen = () => {
             timestamp: serverTimestamp()
           })
           //navigate to the Match screen
-          navigation.navigate('Match')
-          
+          navigation.navigate('Match', {
+            loggedInProfile, 
+            userSwiped
+          })
+
         } else {
           console.log(`you like ${userSwiped.firstName +  userSwiped.lastName}`)
           //push userSwiped to the database

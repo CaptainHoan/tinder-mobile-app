@@ -16,7 +16,7 @@ const MainNavigator = () => {
             <MainStack.Screen name="Home" component={MainScreen} />
             <MainStack.Screen name="Chat" component={ChatScreen} />
             <MainStack.Screen name="Modal" component={ModalScreen} options={{presentation: 'modal'}}/>
-            <MainStack.Screen name="Match" component={MatchScreen} />
+            <MainStack.Screen name="Match" component={MatchScreen} options={{presentation: 'transparentModal'}}/>
         </MainStack.Navigator>
     </NavigationContainer>
   )
