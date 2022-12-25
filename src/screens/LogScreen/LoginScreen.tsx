@@ -22,9 +22,9 @@ const LoginScreen = () => {
 
   //test phone number and verification code created on firebase
   const testPhoneNumber = '+1 234-567-1234'
-  const testVerificationCode = '123456'
   const testPhoneNumber2 = '+1 234-567-6789'
-  const testVerification2 = '123456'
+  const testPhoneNumber3 = '+1 234-567-2345'
+  const testVerificationCode = '123456'
 
   //function to sendVerificationCode
   const sendVerificationCode = async() => {

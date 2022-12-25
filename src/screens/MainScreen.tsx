@@ -5,9 +5,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Swiper from 'react-native-deck-swiper';
-import { collection, doc, onSnapshot } from 'firebase/firestore';
+import { DocumentSnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import { signOut } from 'firebase/auth';
+import generateID from '../lib/generateID';
 
 type DATA_TYPE =  {
   firstName: string,
@@ -18,41 +19,6 @@ type DATA_TYPE =  {
   id: string,
   timestamp?: string 
 }
-
-const DATA: DATA_TYPE[] = [
-  {
-    firstName: 'Iron',
-    lastName: 'Man',
-    occupation: 'Entrepreneur, billionaire, tech brat',
-    age: '24',
-    id: '123',
-    photoURL: 'https://media.contentapi.ea.com/content/dam/news/www-ea/images/2022/09/ea-motive-new-title-teaser-16x9-featured.jpg.adapt.crop191x100.628p.jpg'
-  },
-  {
-    firstName: 'Scarlet',
-    lastName: 'Witch',
-    occupation: 'Evil Witch',
-    age: '35',
-    id: '456',
-    photoURL: 'https://pyxis.nymag.com/v1/imgs/4f0/715/3a408c4b9fd021860939b94c47251a521d-wandavision.rsquare.w700.jpg'
-  },
-  {
-    firstName: 'Thor',
-    lastName: 'Ordinson',
-    occupation: 'God of thunder',
-    age: '37',
-    id: '789',
-    photoURL: 'https://www.koimoi.com/wp-content/new-galleries/2022/09/chris-hemsworth-talks-about-his-return-as-thor-unfortunately-he-isnt-sure-if-he-will-001.jpg'
-  },
-  {
-    firstName: 'Christopher',
-    lastName: 'Nolan',
-    occupation: 'Director',
-    age: '45',
-    id: '150',
-    photoURL: 'https://images.complex.com/complex/images/c_fill,dpr_auto,f_auto,q_90,w_1400/fl_lossy,pg_1/xytc84t0c7ir9r5ysgug/christopher-nolan'
-  }
-]
 
 const MainScreen = () => {
 
@@ -71,7 +37,7 @@ const MainScreen = () => {
     .catch(err => console.log(err.message))
   }
 
-  const [profile, setProfile] = useState<DATA_TYPE[]>([])
+  const [profiles, setProfile] = useState<DATA_TYPE[]>([])
   const [avatar, setAvatar] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0Xdf9OyXn9BpWL30gb6cpyLnkiCCbSaH8wVB1007o9WpYBDgb6J1_afDQTdJuqwgE3xM&usqp=CAU')
 
   //render userProfile from Firestore database
@@ -86,14 +52,35 @@ const MainScreen = () => {
   useEffect(() => {
     let unsub;
     const fetchCards = async() => {
-      unsub = onSnapshot(collection(db, 'users'), snapshot => {
+
+      //fetch those who's been passed
+      const passes = await getDocs(
+        collection(db, 'users', user.uid, 'PASS')
+        ).then(
+          (snapshot) => snapshot.docs.map((doc) => doc.id))
+      const passedUserIds = passes.length > 0 ? passes : ['test']
+
+      // fetch those who's been likes
+      const likes = await getDocs(
+        collection(db, 'users', user.uid, 'LIKE')
+      ).then((snapshot) => snapshot.docs.map((doc) => doc.id))
+      const likedUserIds = likes.length > 0 ? likes : ['tests']
+
+      //fetch users
+      unsub = onSnapshot(
+        query(
+          collection(db, 'users'), 
+          where("id", "not-in", [...passedUserIds, ...likedUserIds]
+        )), snapshot => {
         setProfile(
           snapshot.docs.filter(doc => doc.id !== user.uid).map(doc => ({
             id: doc.id,
             ...doc.data(),
           }))
         )
-        setAvatar(snapshot.docs.filter(doc => doc.id === user.uid).map(doc => ({
+        setAvatar(
+          snapshot.docs.filter(doc => doc.id == user.uid).map(doc => ({
+          id: doc.id,
           ...doc.data()
         }))[0].avatar)
       })
@@ -102,7 +89,52 @@ const MainScreen = () => {
     return unsub;
   }, [])
 
-  console.log(profile)
+  //console.log(profiles)
+
+  //swipe Left function to record in the database profiles you dislike (want to pass)
+  const swipeLeft = async(cardIndex: any) => {
+    if(!profiles[cardIndex]) return
+    const userSwiped = profiles[cardIndex]
+    console.log(`you dislike ${userSwiped.firstName +  userSwiped.lastName}`)
+    setDoc(doc(db, 'users', user.uid, 'PASS', userSwiped.id), userSwiped)
+  }
+
+  // swipeRight function to record in the database profiles you like (want to match)
+  const swipeRight = async(cardIndex: any) => {
+    if(!profiles[cardIndex]) return
+    const userSwiped = profiles[cardIndex]
+    //fetch auth user from database
+    const loggedInProfile = await (await getDoc(doc(db, 'users', user.uid))).data()
+
+    //check if other swipe right on you
+    getDoc(doc(db, 'users', userSwiped.id, 'LIKE', user.uid)).then(
+      DocumentSnapshot => {
+        if(DocumentSnapshot.exists()) {
+
+          //if that user profile has liked you
+          console.log(`you match ${userSwiped.firstName + userSwiped.lastName}`)
+          setDoc(doc(db, 'users', user.uid, 'LIKE', userSwiped.id), userSwiped )
+
+          //if both like each other => create a match to start chatting
+          setDoc(doc(db, 'MATCHES', generateID(user.uid, userSwiped.id)), {
+            users: {
+              [user.uid] : loggedInProfile,
+              [userSwiped.id]: userSwiped
+            },
+            userMatched: [user.uid, userSwiped.id],
+            timestamp: serverTimestamp()
+          })
+          //navigate to the Match screen
+          navigation.navigate('Match')
+          
+        } else {
+          console.log(`you like ${userSwiped.firstName +  userSwiped.lastName}`)
+          //push userSwiped to the database
+          setDoc(doc(db, 'users', user.uid, 'LIKE', userSwiped.id), userSwiped)
+        }
+      }
+    )
+  }
 
   return (
     <SafeAreaView className='flex-1'>
@@ -129,14 +161,16 @@ const MainScreen = () => {
         <Swiper
         ref={swipeRef}
           containerStyle={{backgroundColor: 'transparent'}} 
-          cards={profile}
+          cards={profiles}
           stackSize={5}
           verticalSwipe={false}
-          onSwipedRight={() => {
-            console.log('LIKE')
+          onSwipedRight={(cardIndex) => {
+            console.log('You like')
+            swipeRight(cardIndex)
           }}
-          onSwipedLeft={() => {
-            console.log('NOPE')
+          onSwipedLeft={(cardIndex) => {
+            console.log('You pass')
+            swipeLeft(cardIndex)
           }}
           overlayLabels={{
             left: {
@@ -159,7 +193,7 @@ const MainScreen = () => {
           }}
           animateCardOpacity
           cardIndex={0}
-          renderCard={(card) => card ? (
+          renderCard={card => card ? (
             <View className='bg-white h-3/4 rounded-xl relative -mt-6' key={card.id}>
               <Image source={{uri: card.photoURL}} className='h-full w-full rounded-xl' />
               <View className="bg-white w-full h-20 items-center justify-between flex-row px-5 rounded-b-xl" style={styles.cardShadow}>
