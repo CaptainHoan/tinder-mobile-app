@@ -90,7 +90,7 @@ const MainScreen = () => {
     return unsub;
   }, [avatar, db])
 
-  console.log(avatar)
+  //console.log(avatar)
   //console.log(profiles)
 
   //swipe Left function to record in the database profiles you dislike (want to pass)

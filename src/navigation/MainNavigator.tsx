@@ -6,6 +6,7 @@ import MainScreen from '../screens/MainScreen';
 import ChatScreen from '../screens/ChatScreen';
 import ModalScreen from '../screens/ModalScreen';
 import MatchScreen from '../screens/MatchScreen';
+import MessengerScreen from '../screens/MessengerScreen';
 
 const MainStack = createStackNavigator();
 
@@ -16,7 +17,10 @@ const MainNavigator = () => {
             <MainStack.Screen name="Home" component={MainScreen} />
             <MainStack.Screen name="Chat" component={ChatScreen} />
             <MainStack.Screen name="Modal" component={ModalScreen} options={{presentation: 'modal'}}/>
-            <MainStack.Screen name="Match" component={MatchScreen} options={{presentation: 'transparentModal'}}/>
+            <MainStack.Screen name="Match" component={MatchScreen} 
+              options={{presentation: 'transparentModal'}}
+            />
+            <MainStack.Screen name="Messenger" component={MessengerScreen} />
         </MainStack.Navigator>
     </NavigationContainer>
   )
