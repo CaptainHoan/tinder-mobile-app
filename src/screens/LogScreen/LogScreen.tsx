@@ -2,10 +2,11 @@ import { View, Text, ImageBackground, TouchableOpacity, Image } from 'react-nati
 import React from 'react'
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { LoginNavigationType } from '../../types/navigation/LoginNavigationType';
 
 const LogScreen = () => {
 
-    const navigation = useNavigation()
+    const navigation = useNavigation<LoginNavigationType>()
   return (
     <ImageBackground
         style={{flex: 1, justifyContent: "center"}}

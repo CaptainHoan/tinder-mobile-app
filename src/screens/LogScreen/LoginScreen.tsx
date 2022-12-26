@@ -34,7 +34,7 @@ const LoginScreen = () => {
     try {
       const phoneProvider = new PhoneAuthProvider(auth)
       const verificationId = await phoneProvider.verifyPhoneNumber(
-        testPhoneNumber, //your actual phone number : "phoneNumber"
+        phoneNumber, //your actual phone number : "phoneNumber"
         recaptchaVerifier.current
       )
       setShowConfirmInput(true)
@@ -46,7 +46,7 @@ const LoginScreen = () => {
 
   const LogInWithPhone = async() => {
     try {
-      const credential = PhoneAuthProvider.credential(verificationId, testVerificationCode); // your actual verification code sent to your device: "verificationCode"
+      const credential = PhoneAuthProvider.credential(verificationId, verificationCode); // your actual verification code sent to your device: "verificationCode"
       const userCredential = await signInWithCredential(auth, credential);
       console.log(userCredential)
     }catch(error:any) {

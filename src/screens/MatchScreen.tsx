@@ -2,10 +2,11 @@ import { View, Text, Image } from 'react-native'
 import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ChatNavigationType } from '../types/navigation/MainNavigationType';
 
 const MatchScreen = () => {
 
-    const navigation = useNavigation();
+    const navigation = useNavigation<ChatNavigationType>();
     const {params} = useRoute();
 
     const {loggedInProfile, userSwiped} = params

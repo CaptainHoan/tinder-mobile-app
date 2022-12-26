@@ -7,8 +7,9 @@ import ChatScreen from '../screens/ChatScreen';
 import ModalScreen from '../screens/ModalScreen';
 import MatchScreen from '../screens/MatchScreen';
 import MessengerScreen from '../screens/MessengerScreen';
+import { MainStackParamLists } from '../types/navigation/MainNavigationType';
 
-const MainStack = createStackNavigator();
+const MainStack = createStackNavigator<MainStackParamLists>();
 
 const MainNavigator = () => {
   return (

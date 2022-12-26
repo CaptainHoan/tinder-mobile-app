@@ -9,8 +9,9 @@ import { DocumentSnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, 
 import { auth, db } from '../../firebaseConfig';
 import { signOut } from 'firebase/auth';
 import generateID from '../lib/generateID';
+import { MainNavigationType } from '../types/navigation/MainNavigationType';
 
-type DATA_TYPE =  {
+export type DATA_TYPE =  {
   firstName: string,
   lastName: string,
   occupation: string,
@@ -23,7 +24,7 @@ type DATA_TYPE =  {
 
 const MainScreen = () => {
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<MainNavigationType>();
 
   const swipeRef = useRef(null)
 

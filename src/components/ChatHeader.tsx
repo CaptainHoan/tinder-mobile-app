@@ -4,10 +4,11 @@ import { useNavigation } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
+import { ChatNavigationType } from '../types/navigation/MainNavigationType';
 
 const ChatHeader = ({title, callEnabled}) => {
 
-    const navigation = useNavigation();
+    const navigation = useNavigation<ChatNavigationType>();
 
   return (
     <View className='mx-2 flex-row items-center justify-between'>
