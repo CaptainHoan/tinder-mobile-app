@@ -96,7 +96,7 @@ const MainScreen = () => {
           snapshot.docs.filter(doc => doc.id === user.uid).map(doc => ({
           id: doc.id,
           ...doc.data()
-        }))[0]?.avatar) //[0]
+        }))[0]?.avatar)
       })
     }
     fetchCards()
@@ -236,7 +236,9 @@ const MainScreen = () => {
 
       <View className='flex-row flex justify-evenly mb-3'>
         <TouchableOpacity
-          onPress={() => swipeRef.current.swipeLeft()} 
+          onPress={() => 
+            swipeRef.current.swipeLeft()
+          } 
           className='items-center justify-center rounded-full w-16 h-16 bg-red-200'
         >
           <Entypo name="cross" size={30} color="red" />

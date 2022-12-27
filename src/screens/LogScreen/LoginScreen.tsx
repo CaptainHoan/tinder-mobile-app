@@ -35,7 +35,7 @@ const LoginScreen = () => {
     try {
       const phoneProvider = new PhoneAuthProvider(auth)
       const verificationId = await phoneProvider.verifyPhoneNumber(
-        testPhoneNumber7, //your actual phone number : "phoneNumber"
+        testPhoneNumber, //your actual phone number : "phoneNumber"
         recaptchaVerifier.current
       )
       setShowConfirmInput(true)
