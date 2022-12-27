@@ -10,7 +10,7 @@
 
 ### App features and future updates
 - Full user authentication using phone number and firebase auth
-- Like Tinder, User can swipe left and right and match with other users they wanna macth.
+- Like Tinder, User can swipe left and right and match with other users they wanna match.
 - Real time messaging chat between users who matched with each other.
 - Upcoming updates: looking to add new features like unmatch, super like,...
 
