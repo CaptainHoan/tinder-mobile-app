@@ -5,13 +5,17 @@ import { useNavigation } from '@react-navigation/native';
 import getMatches from '../lib/getMatches';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
-import { ChatNavigationType } from '../types/navigation/MainNavigationType';
+import { ChatNavigationType, MATCH_TYPE } from '../types/navigation/MainNavigationType';
+import { DATA_TYPE } from '../screens/MainScreen';
 
-const ChatRow = ({matchDetails}) => {
+const ChatRow = ({matchDetails}: {matchDetails: MATCH_TYPE}) => {
 
     const user = auth.currentUser;
+    // check if user === null
+    if (user === null) return;
+
     const navigation = useNavigation<ChatNavigationType>();
-    const [matchUser, setMatchUser] = useState(null)
+    const [matchUser, setMatchUser] = useState<DATA_TYPE | null>(null)
 
     //query last message
     const [lastMessage, setLastMessage] = useState<string>('')
@@ -19,8 +23,6 @@ const ChatRow = ({matchDetails}) => {
     useEffect(() => {
       setMatchUser(getMatches(matchDetails.users, user.uid))
     }, [matchDetails, user])
-
-    console.log('haha',matchDetails)
 
     useEffect(() => 
       onSnapshot(

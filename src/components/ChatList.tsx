@@ -2,15 +2,15 @@ import { View, Text, FlatList, Image } from 'react-native'
 import React, {useState, useEffect} from 'react'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { auth, db } from '../../firebaseConfig'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import getMatches from '../lib/getMatches'
 import ChatRow from './ChatRow'
+import { MATCH_TYPE } from '../types/navigation/MainNavigationType'
 
 const ChatList = () => {
 
     //fetch matches from database
-    const [matches, setMatches] = useState([])
+    const [matches, setMatches] = useState<MATCH_TYPE[]>([])
     const user = auth.currentUser
+    if (user === null) return
 
     useEffect(() => 
       onSnapshot(
@@ -25,10 +25,13 @@ const ChatList = () => {
                 }))
             )),
     [user])
-    
+
+    console.log('Matches are', matches)
+
+    if(matches.length === 0) return
 
     return (
-        matches.length > 0 
+        matches.length > 0
         ? 
         (
             <FlatList 

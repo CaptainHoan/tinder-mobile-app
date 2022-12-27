@@ -3,7 +3,7 @@ import React, {useRef, useState}  from 'react'
 import PhoneInput from "react-native-phone-number-input";
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { auth } from '../../../firebaseConfig';
-import { PhoneAuthProvider, RecaptchaVerifier, signInWithCredential } from 'firebase/auth';
+import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
 import { getApp } from 'firebase/app';
 
 const LoginScreen = () => {

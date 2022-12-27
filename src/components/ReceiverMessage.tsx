@@ -1,7 +1,8 @@
 import { View, Text, Image } from 'react-native'
 import React from 'react'
+import { messageType } from '../screens/MessengerScreen'
 
-const ReceiverMessage = ({message}) => {
+const ReceiverMessage = ({message}: {message: messageType}) => {
   return (
     <View
         className='bg-red-400 rounded-lg rounded-tl-none px-5 py-3 mx-3 my-2 ml-14'

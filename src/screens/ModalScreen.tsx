@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { auth, db } from '../../firebaseConfig'; 
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
+import { MainNavigationType } from '../types/navigation/MainNavigationType';
 
 const ModalScreen = () => {
 
@@ -11,7 +12,7 @@ const ModalScreen = () => {
   const user = auth.currentUser;
   // console.log(user)
 
-  const navigation = useNavigation()
+  const navigation = useNavigation<MainNavigationType>()
   const [firstName, setFirstName] = useState<string>('')
   const [lastName, setLastName] = useState<string>('')
   const [age, setAge] = useState<string>('')

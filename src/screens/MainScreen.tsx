@@ -5,7 +5,17 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Swiper from 'react-native-deck-swiper';
-import { DocumentSnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
+import { 
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  onSnapshot, 
+  query, 
+  serverTimestamp, 
+  setDoc, 
+  where 
+} from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import { signOut } from 'firebase/auth';
 import generateID from '../lib/generateID';
@@ -18,7 +28,7 @@ export type DATA_TYPE =  {
   age: string,
   photoURL: string,
   id: string,
-  timestamp?: string,
+  timestamp?: Date,
   avatar: string 
 }
 
@@ -28,7 +38,9 @@ const MainScreen = () => {
 
   const swipeRef = useRef(null)
 
-  const user = auth.currentUser;
+  const user = auth.currentUser
+
+  if(user === null) return
 
   //signOut user
   const signOutUser = async() => {

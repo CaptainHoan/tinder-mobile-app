@@ -17,16 +17,29 @@ import { useRoute } from '@react-navigation/native'
 import SenderMessage from '../components/SenderMessage'
 import ReceiverMessage from '../components/ReceiverMessage'
 import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore'
+import { ChatRouteProp, } from '../types/navigation/MainNavigationType'
+
+export type messageType = {
+  timestamp: Date,
+  userId: string,
+  firstName: string,
+  lastName: string,
+  avatar: string,
+  message: string,
+  id?: string,
+}
 
 const MessengerScreen = () => {
 
-  const {params} = useRoute()
+  const {params} = useRoute<ChatRouteProp>()
   const { matchDetails } = params;
   const user = auth.currentUser;
-  const [messageInput, setMessageInput] = useState<string>('')
-  const [messages, setMessages] = useState([])
-  
+  // check if user is null
+  if(user === null) return
 
+  const [messageInput, setMessageInput] = useState<string>('')
+  const [messages, setMessages] = useState<messageType[]>([])
+  
   //send message
   const sendMessage = () => {
     addDoc(collection(db, 'MATCHES',  matchDetails.id, 'messages'), {
@@ -39,6 +52,8 @@ const MessengerScreen = () => {
     })
     setMessageInput("")
   }
+
+  console.log(messages)
 
   useEffect(() => 
     onSnapshot(
@@ -78,7 +93,7 @@ const MessengerScreen = () => {
           <FlatList 
             data={messages}
             className="pl-4"
-            inverted={-1}
+            inverted={true}
             keyExtractor={item => item.id}
             renderItem={
               ({item: message}) => 

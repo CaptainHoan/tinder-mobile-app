@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, TouchableOpacity, Image } from 'react-native'
+import { Text, ImageBackground, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
