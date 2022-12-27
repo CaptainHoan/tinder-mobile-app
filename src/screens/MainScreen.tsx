@@ -28,7 +28,7 @@ export type DATA_TYPE =  {
   age: string,
   photoURL: string,
   id: string,
-  timestamp?: Date,
+  timestamp: Date,
   avatar: string 
 }
 
@@ -96,7 +96,7 @@ const MainScreen = () => {
           snapshot.docs.filter(doc => doc.id === user.uid).map(doc => ({
           id: doc.id,
           ...doc.data()
-        }))[0].avatar)
+        }))[0]?.avatar) //[0]
       })
     }
     fetchCards()
